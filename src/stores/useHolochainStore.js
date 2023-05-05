@@ -35,7 +35,7 @@ const makeUseHolochainStore = ({ installed_app_id, app_ws_url }) => defineStore(
         }
 
         this.loadAppInfo()
-        return this.client;
+        return this.client.value;
       } catch (e) {
         console.error('Holochain connection error ', e)
         this.isReady = false
