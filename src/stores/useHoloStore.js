@@ -1,5 +1,6 @@
 import WebSdk from '@holo-host/web-sdk'
 import { defineStore } from 'pinia'
+import { toRaw } from 'vue'
 import useIsLoadingStore from './useIsLoadingStore'
 import useSignalStore from './useSignalStore'
 
