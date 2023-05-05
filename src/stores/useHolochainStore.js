@@ -1,6 +1,6 @@
 import { inspect } from 'util'
 import { AppWebsocket } from '@holochain/client'
-import { defineStore } from 'pinia'
+import { defineStore, toRaw } from 'pinia'
 import { presentHcSignal } from '../utils'
 import useIsLoadingStore from './useIsLoadingStore'
 import useSignalStore from './useSignalStore'
@@ -35,7 +35,7 @@ const makeUseHolochainStore = ({ installed_app_id, app_ws_url }) => defineStore(
         }
 
         this.loadAppInfo()
-        return this.client.value;
+        return toRaw(this.client);
       } catch (e) {
         console.error('Holochain connection error ', e)
         this.isReady = false
