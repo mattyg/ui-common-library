@@ -3,10 +3,9 @@ import { defineStore } from 'pinia'
 import useIsLoadingStore from './useIsLoadingStore'
 import useSignalStore from './useSignalStore'
 
-let client
-
 const makeUseHoloStore = ({ connectionArgs, MockWebSdk }) => defineStore('holo', {
   state: () => ({
+    client: null,
     agentState: {},
     happId: null,
     connectionError: null,
@@ -27,9 +26,9 @@ const makeUseHoloStore = ({ connectionArgs, MockWebSdk }) => defineStore('holo',
     async initialize() {
       try {
         if (MockWebSdk) {
-          client = await MockWebSdk.connect(connectionArgs)
+          this.client = await MockWebSdk.connect(connectionArgs)
         } else {
-          client = await WebSdk.connect(connectionArgs)
+          this.client = await WebSdk.connect(connectionArgs)
         }
       } catch (e) {
         throw e
@@ -41,7 +40,7 @@ const makeUseHoloStore = ({ connectionArgs, MockWebSdk }) => defineStore('holo',
         }
 
         // This is a temporary addition, until chaperone is updated to include app info as part of agent state
-        client.appInfo().then((appInfo) => {
+        this.client.appInfo().then((appInfo) => {
           this.appInfo = appInfo
         })
 
@@ -50,27 +49,29 @@ const makeUseHoloStore = ({ connectionArgs, MockWebSdk }) => defineStore('holo',
         this.isReady = this.isLoggedIn
       }
 
-      client.on('agent-state', onAgentState)
-      client.on('signal', payload => useSignalStore().handleSignal(payload))
+      this.client.on('agent-state', onAgentState)
+      this.client.on('signal', payload => useSignalStore().handleSignal(payload))
 
-      this.happId = client.happId
+      this.happId = this.client.happId
 
       // Set agent state in case `agent-state` event is never emitted. This is the case with Mock Web SDK because it never emits events
-      onAgentState(client.agent)
+      onAgentState(this.client.agent)
+
+      return this.client;
     },
 
     signIn() {
       this.isAuthFormOpen = true
-      return client.signIn({ cancellable: false })
+      return this.client.signIn({ cancellable: false })
     },
 
     signUp() {
       this.isAuthFormOpen = true
-      client.signUp({ cancellable: false })
+      this.client.signUp({ cancellable: false })
     },
 
     signOut() {
-      client.signOut()
+      this.client.signOut()
     },
 
     async callZome(args) {
@@ -81,7 +82,7 @@ const makeUseHoloStore = ({ connectionArgs, MockWebSdk }) => defineStore('holo',
       let result
 
       try {
-        result = await client.callZome({
+        result = await this.client.callZome({
           role_name,
           zome_name,
           fn_name,
@@ -95,7 +96,7 @@ const makeUseHoloStore = ({ connectionArgs, MockWebSdk }) => defineStore('holo',
     },
 
     async loadAppInfo() {
-      this.appInfo = await client.appInfo()
+      this.appInfo = await this.client.appInfo()
       return this.appInfo
     }
 

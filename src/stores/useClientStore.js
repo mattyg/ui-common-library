@@ -24,7 +24,7 @@ const makeUseClientStore = ({ useInterfaceStore, onInit }) => defineStore('clien
         }
       })
 
-      useInterfaceStore().initialize()
+      return useInterfaceStore().initialize()
     },
 
     async appInfo() {
