@@ -84,7 +84,7 @@ const makeUseHolochainStore = ({ installed_app_id, app_ws_url }) => defineStore(
             zome_name,
             fn_name,
             payload,
-            provenance: cell_id[1]
+            provenance: this.client.agent_pub_key
           },
           HC_APP_TIMEOUT
         )
