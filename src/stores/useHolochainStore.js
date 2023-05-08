@@ -63,7 +63,7 @@ const makeUseHolochainStore = ({ installed_app_id, app_ws_url }) => defineStore(
         throw new Error('Tried to make a zome call before storing appInfo')
       }
 
-      const role_names = Object.keys(app_info.cell_info)
+      const role_names = Object.keys(this.appInfo.cell_info)
       if (role_names.length === 0 ) {
         throw new Error('No cells found in appInfo')
       }
