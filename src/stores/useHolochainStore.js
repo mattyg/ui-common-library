@@ -58,7 +58,7 @@ const makeUseHolochainStore = ({ installed_app_id, app_ws_url }) => defineStore(
     },
 
     async callZome(args) {
-      const { zome_name, fn_name, payload } = args
+      const { role_name, zome_name, fn_name, payload } = args
       if (!this.appInfo) {
         throw new Error('Tried to make a zome call before storing appInfo')
       }
