@@ -11,7 +11,7 @@ const makeUseClientStore = ({ useInterfaceStore, onInit }) => defineStore('clien
     agentId: state => state.agentKey && encodeAgentId(state.agentKey)
   },
   actions: {
-    async initialize() {
+    initialize() {
       // onInit is a hack, see stores/index.js for details
       onInit?.()
 
@@ -27,11 +27,11 @@ const makeUseClientStore = ({ useInterfaceStore, onInit }) => defineStore('clien
       return useInterfaceStore().initialize()
     },
 
-    async appInfo() {
+    appInfo() {
       return useInterfaceStore().loadAppInfo()
     },
 
-    async callZome({ role_name, zome_name, fn_name, payload = null }) {
+    callZome({ role_name, zome_name, fn_name, payload = null }) {
       const zomePath = `${zome_name}.${fn_name}`
       console.log(`calling ${zomePath} with ${inspect(payload)}`)
 
@@ -39,12 +39,8 @@ const makeUseClientStore = ({ useInterfaceStore, onInit }) => defineStore('clien
         throw new Error('Tried to make zome call while client is not ready')
       }
 
-      const result = await useInterfaceStore().callZome({ role_name, zome_name, fn_name, payload })
-
-      console.log(`${zomePath} result`, result)
-
-      return result
-    },
+      return useInterfaceStore().callZome({ role_name, zome_name, fn_name, payload })
+    }
   }
 })
 

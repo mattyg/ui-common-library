@@ -36,11 +36,13 @@ const makeUseHolochainStore = ({ installed_app_id, app_ws_url }) => defineStore(
         }
 
         this.loadAppInfo()
-        return toRaw(this.client);
       } catch (e) {
         console.error('Holochain connection error ', e)
         this.isReady = false
+        throw e
       }
+
+      return toRaw(this.client)
     },
 
     async loadAppInfo() {
@@ -50,11 +52,12 @@ const makeUseHolochainStore = ({ installed_app_id, app_ws_url }) => defineStore(
         })
         this.appInfo = appInfo
         this.isReady = true
-
-        return appInfo
-      } catch (error) {
-        console.error('appInfo() returned error.', inspect(error))
+      } catch (e) {
+        console.error('appInfo() returned error.', inspect(e))
+        throw e
       }
+
+      return this.appInfo
     },
 
     async callZome(args) {
@@ -64,7 +67,7 @@ const makeUseHolochainStore = ({ installed_app_id, app_ws_url }) => defineStore(
       }
 
       const role_names = Object.keys(this.appInfo.cell_info)
-      if (role_names.length === 0 ) {
+      if (role_names.length === 0) {
         throw new Error('No cells found in appInfo')
       }
 
@@ -88,8 +91,11 @@ const makeUseHolochainStore = ({ installed_app_id, app_ws_url }) => defineStore(
           },
           HC_APP_TIMEOUT
         )
-        
+
         return result
+      } catch (e) {
+        console.error('appInfo() returned error.', inspect(e))
+        throw e
       } finally {
         useIsLoadingStore().callIsNotLoading({ zome_name, fn_name })
       }

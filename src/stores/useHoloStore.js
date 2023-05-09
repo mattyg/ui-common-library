@@ -1,3 +1,4 @@
+import { inspect } from 'util'
 import WebSdk from '@holo-host/web-sdk'
 import { defineStore } from 'pinia'
 import { toRaw } from 'vue'
@@ -32,6 +33,7 @@ const makeUseHoloStore = ({ connectionArgs, MockWebSdk }) => defineStore('holo',
           this.client = await WebSdk.connect(connectionArgs)
         }
       } catch (e) {
+        console.error('Holo connection error ', e)
         throw e
       }
 
@@ -58,7 +60,7 @@ const makeUseHoloStore = ({ connectionArgs, MockWebSdk }) => defineStore('holo',
       // Set agent state in case `agent-state` event is never emitted. This is the case with Mock Web SDK because it never emits events
       onAgentState(this.client.agent)
 
-      return toRaw(this.client);
+      return toRaw(this.client)
     },
 
     signIn() {
@@ -88,7 +90,10 @@ const makeUseHoloStore = ({ connectionArgs, MockWebSdk }) => defineStore('holo',
           zome_name,
           fn_name,
           payload
-        })        
+        })
+      } catch (e) {
+        console.error('appInfo() returned error.', inspect(e))
+        throw e
       } finally {
         useIsLoadingStore().callIsNotLoading({ zome_name, fn_name })
       }
@@ -97,10 +102,16 @@ const makeUseHoloStore = ({ connectionArgs, MockWebSdk }) => defineStore('holo',
     },
 
     async loadAppInfo() {
-      this.appInfo = await this.client.appInfo()
+      try {
+        const appInfo = await this.client.appInfo()
+        this.appInfo = appInfo
+      } catch (e) {
+        console.error('appInfo() returned error.', inspect(e))
+        throw e
+      }
+
       return this.appInfo
     }
-
   }
 })
 
