@@ -21,7 +21,7 @@ const makeUseHolochainStore = ({ installed_app_id, app_ws_url }) => defineStore(
         const holochainClient = await AppWebsocket.connect(
           app_ws_url,
           HC_APP_TIMEOUT,
-          signal => useSignalStore().handleSignal(presentHcSignal(signal))
+          signal => useSignalStore().handleSignal(signal)
         )
 
         this.client = holochainClient
