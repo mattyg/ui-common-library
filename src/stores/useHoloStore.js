@@ -5,6 +5,8 @@ import { toRaw } from 'vue'
 import useIsLoadingStore from './useIsLoadingStore'
 import useSignalStore from './useSignalStore'
 
+const HC_APP_TIMEOUT = 35_000
+
 const makeUseHoloStore = ({ connectionArgs, MockWebSdk }) => defineStore('holo', {
   state: () => ({
     client: null,
@@ -78,19 +80,49 @@ const makeUseHoloStore = ({ connectionArgs, MockWebSdk }) => defineStore('holo',
     },
 
     async callZome(args) {
-      const { role_name, zome_name, fn_name, payload } = args
+      const { cell_id, role_name, zome_name, fn_name, payload } = args
+
+      if (!this.appInfo) {
+        throw new Error('Tried to make a zome call before storing appInfo')
+      }
+
+      if (!role_name && !cell_id) {
+        throw new Error('Must specify a cell_id or role_name')
+      }
+
+      if (!role_name && !cell_id) {
+        throw new Error('Must specify a cell_id or role_name')
+      }
+
+      const callZomeArgs = {
+        cap_secret: null,
+        zome_name,
+        fn_name,
+        payload,
+        provenance: this.client.agent_pub_key
+      }
+
+      if (role_name) {
+        const role_names = Object.keys(this.appInfo.cell_info)
+        if (role_names.length === 0) {
+          throw new Error('No cells found in appInfo')
+        }
+        const roleName = role_names.find(roleName => roleName === role_name)
+        if (!roleName) {
+          throw new Error(`Couldn't find cell with role_name ${role_name}`)
+        }
+
+        callZomeArgs.role_name = roleName
+      } else {
+        callZomeArgs.cell_id = cell_id
+      }
 
       useIsLoadingStore().callIsLoading({ zome_name, fn_name })
 
       let result
 
       try {
-        result = await this.client.callZome({
-          role_name,
-          zome_name,
-          fn_name,
-          payload
-        })
+        result = await this.client.callZome(callZomeArgs, HC_APP_TIMEOUT)
       } catch (e) {
         console.error('callZome() returned error.', inspect(e))
         throw e
