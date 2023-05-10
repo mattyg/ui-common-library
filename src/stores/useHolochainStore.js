@@ -2,7 +2,6 @@ import { inspect } from 'util'
 import { AppWebsocket } from '@holochain/client'
 import { defineStore } from 'pinia'
 import { toRaw } from 'vue'
-import { presentHcSignal } from '../utils'
 import useIsLoadingStore from './useIsLoadingStore'
 import useSignalStore from './useSignalStore'
 

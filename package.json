@@ -17,7 +17,7 @@
   },
   "dependencies": {
     "@holo-host/identicon": "^0.1.0",
-    "@holo-host/web-sdk": "^0.6.11-prerelease",
+    "@holo-host/web-sdk": "github:mattyg/web-sdk#fix/update-hc-client",
     "@testing-library/user-event": "^13.2.1",
     "@vueuse/core": "^9.13.0",
     "add": "^2.0.6",
