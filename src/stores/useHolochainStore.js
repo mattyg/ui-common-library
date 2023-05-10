@@ -94,7 +94,7 @@ const makeUseHolochainStore = ({ installed_app_id, app_ws_url }) => defineStore(
 
         return result
       } catch (e) {
-        console.error('appInfo() returned error.', inspect(e))
+        console.error('callZome() returned error.', inspect(e))
         throw e
       } finally {
         useIsLoadingStore().callIsNotLoading({ zome_name, fn_name })

@@ -92,7 +92,7 @@ const makeUseHoloStore = ({ connectionArgs, MockWebSdk }) => defineStore('holo',
           payload
         })
       } catch (e) {
-        console.error('appInfo() returned error.', inspect(e))
+        console.error('callZome() returned error.', inspect(e))
         throw e
       } finally {
         useIsLoadingStore().callIsNotLoading({ zome_name, fn_name })
