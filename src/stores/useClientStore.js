@@ -9,7 +9,7 @@ const makeUseClientStore = ({ useInterfaceStore, onInit }) => defineStore('clien
   }),
   getters: {
     agentId: state => state.agentKey && encodeAgentId(state.agentKey),
-    appInfo: () => useInterfaceStore().state.appInfo
+    appInfo: () => useInterfaceStore().appInfo
   },
   actions: {
     initialize() {
