@@ -33,15 +33,15 @@ const makeUseClientStore = ({ useInterfaceStore, onInit }) => defineStore('clien
       return useInterfaceStore().loadAppInfo()
     },
 
-    callZome({ role_name, zome_name, fn_name, payload = null }) {
+    callZome({ cell_id, role_name, zome_name, fn_name, payload = null }) {
       const zomePath = `${zome_name}.${fn_name}`
-      console.log(`calling ${zomePath} with ${inspect(payload)}`)
+      console.log(`calling cell ${zomePath} with ${inspect(payload)}`)
 
       if (!this.isReady) {
         throw new Error('Tried to make zome call while client is not ready')
       }
 
-      return useInterfaceStore().callZome({ role_name, zome_name, fn_name, payload })
+      return useInterfaceStore().callZome({ cell_id, role_name, zome_name, fn_name, payload })
     }
   }
 })
