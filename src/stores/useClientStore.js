@@ -8,7 +8,8 @@ const makeUseClientStore = ({ useInterfaceStore, onInit }) => defineStore('clien
     isReady: false
   }),
   getters: {
-    agentId: state => state.agentKey && encodeAgentId(state.agentKey)
+    agentId: state => state.agentKey && encodeAgentId(state.agentKey),
+    appInfo: () => useInterfaceStore().state.appInfo
   },
   actions: {
     initialize() {
@@ -27,7 +28,7 @@ const makeUseClientStore = ({ useInterfaceStore, onInit }) => defineStore('clien
       return useInterfaceStore().initialize()
     },
 
-    appInfo() {
+    loadAppInfo() {
       return useInterfaceStore().loadAppInfo()
     },
 
