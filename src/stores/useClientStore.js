@@ -1,5 +1,6 @@
 import { inspect } from 'util'
 import { defineStore } from 'pinia'
+import { toRaw } from 'vue'
 import { encodeAgentId } from '../utils/agent'
 
 const makeUseClientStore = ({ useInterfaceStore, onInit }) => defineStore('client', {
@@ -9,7 +10,7 @@ const makeUseClientStore = ({ useInterfaceStore, onInit }) => defineStore('clien
   }),
   getters: {
     agentId: state => state.agentKey && encodeAgentId(state.agentKey),
-    appInfo: () => useInterfaceStore().appInfo
+    appInfo: () => toRaw(useInterfaceStore().appInfo)
   },
   actions: {
     initialize() {
